@@ -48,6 +48,7 @@ def getWorld2View2(R, t, translate=np.array([.0, .0, .0]), scale=1.0):
     Rt = np.linalg.inv(C2W)
     return np.float32(Rt)
 
+# https://www.songho.ca/opengl/gl_projectionmatrix.html
 def getProjectionMatrix(znear, zfar, fovX, fovY):
     tanHalfFovY = math.tan((fovY / 2))
     tanHalfFovX = math.tan((fovX / 2))
@@ -66,10 +67,14 @@ def getProjectionMatrix(znear, zfar, fovX, fovY):
     P[0, 2] = (right + left) / (right - left)
     P[1, 2] = (top + bottom) / (top - bottom)
     P[3, 2] = z_sign
+    # TODO: why this, but not in the link
+    # Using this，The Z axis in ND coordinate will be [0,1]
+    # rather then [-1, 1], so there is no need to multiply 2
     P[2, 2] = z_sign * zfar / (zfar - znear)
     P[2, 3] = -(zfar * znear) / (zfar - znear)
     return P
 
+# fov和focal之间的变换
 def fov2focal(fov, pixels):
     return pixels / (2 * math.tan(fov / 2))
 

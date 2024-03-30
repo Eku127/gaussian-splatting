@@ -43,12 +43,18 @@ class GaussianModel:
 
     def __init__(self, sh_degree : int):
         self.active_sh_degree = 0
-        self.max_sh_degree = sh_degree  
+        self.max_sh_degree = sh_degree
+        # world coordinate
         self._xyz = torch.empty(0)
+        # diffuse color
         self._features_dc = torch.empty(0)
+        # spherical harmonic coefficients
         self._features_rest = torch.empty(0)
+        # 3d scale
         self._scaling = torch.empty(0)
+        # 3d rot in quaternions
         self._rotation = torch.empty(0)
+        # opacity
         self._opacity = torch.empty(0)
         self.max_radii2D = torch.empty(0)
         self.xyz_gradient_accum = torch.empty(0)
@@ -212,9 +218,11 @@ class GaussianModel:
         optimizable_tensors = self.replace_tensor_to_optimizer(opacities_new, "opacity")
         self._opacity = optimizable_tensors["opacity"]
 
+    # 从colmap中得到的信息来初始化信息
+    # 初始化之前定义的内容
     def load_ply(self, path):
         plydata = PlyData.read(path)
-
+        # plydata.elements[0]通常是点云数据
         xyz = np.stack((np.asarray(plydata.elements[0]["x"]),
                         np.asarray(plydata.elements[0]["y"]),
                         np.asarray(plydata.elements[0]["z"])),  axis=1)

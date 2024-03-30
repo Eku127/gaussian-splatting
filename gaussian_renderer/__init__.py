@@ -15,7 +15,8 @@ from diff_gaussian_rasterization import GaussianRasterizationSettings, GaussianR
 from scene.gaussian_model import GaussianModel
 from utils.sh_utils import eval_sh
 
-def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, scaling_modifier = 1.0, override_color = None):
+# 此处定义了scale modifier的值
+def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, scaling_modifier = 1.0, override_color = None): 
     """
     Render the scene. 
     
@@ -82,6 +83,7 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
         colors_precomp = override_color
 
     # Rasterize visible Gaussians to image, obtain their radii (on screen). 
+    # 这里其实就相当于是output = model(input_data)
     rendered_image, radii = rasterizer(
         means3D = means3D,
         means2D = means2D,
